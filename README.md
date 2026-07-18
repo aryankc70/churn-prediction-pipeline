@@ -1,4 +1,5 @@
 # End-to-End Churn Prediction Pipeline
+![CI](https://github.com/aryankc70/churn-prediction-pipeline/actions/workflows/ci.yml/badge.svg)
 
 Production-style ML pipeline: data ingestion → feature engineering → XGBoost training (tracked with MLflow) → containerized FastAPI serving → CI/CD with GitHub Actions.
 
@@ -42,6 +43,21 @@ threshold because `scale_pos_weight` compensates for the 26.5% class
 imbalance, catching more actual churners. Model choice therefore depends
 on use: ranking customers for a retention budget → either model;
 flagging churners at a fixed threshold → XGBoost.
+
+## API in action
+
+```bash
+$ curl -X POST localhost:8000/predict -d '{"tenure": 2, "Contract": "Month-to-month", "MonthlyCharges": 95, ...}'
+{"churn_probability": 0.7873, "high_risk": true}
+
+$ curl -X POST localhost:8000/predict -d '{"tenure": 60, "Contract": "Two year", "MonthlyCharges": 40, ...}'
+{"churn_probability": 0.2456, "high_risk": false}
+```
+
+The model separates the classic churner profile (short tenure,
+month-to-month, electronic check) from a locked-in loyal customer by
+a factor of 3x — sanity confirmation that the full pipeline (cleaning →
+features → model → serving) is wired correctly.
 
 ## Tests & CI
 `pytest tests/` runs locally; GitHub Actions runs lint + tests on every push.

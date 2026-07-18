@@ -16,6 +16,7 @@ PROCESSED = ROOT / "data/processed"
 MODELS = ROOT / "models"
 
 
+
 def load():
     train = build_features(pd.read_csv(PROCESSED / "train.csv"))
     test = build_features(pd.read_csv(PROCESSED / "test.csv"))
@@ -26,6 +27,7 @@ def load():
 
 
 def main():
+    mlflow.set_tracking_uri(f"file://{ROOT / 'mlruns'}")
     mlflow.set_experiment("churn-prediction")
     X_tr, y_tr, X_te, y_te = load()
 
