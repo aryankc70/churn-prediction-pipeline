@@ -26,12 +26,22 @@ docker run -p 8000:8000 churn-api
 ```
 
 ## Results
+
 | Model | ROC-AUC | F1 |
 |---|---|---|
-| Logistic Regression (baseline) | _fill in_ | _fill in_ |
-| XGBoost (tuned) | _fill in_ | _fill in_ |
+| Logistic Regression (baseline) | 0.843 | 0.592 |
+| XGBoost (class-weighted) | 0.837 | 0.619 |
 
-Run `mlflow ui` to browse experiments.
+![MLflow runs](docs/mlflow_runs.png)
+
+The honest headline: the linear baseline slightly *wins* on ROC-AUC —
+churn drivers in this dataset (contract type, tenure, monthly charges)
+are largely linear, and 5.6k rows isn't enough for tree ensembles to
+find interactions worth their variance. XGBoost wins F1 at the 0.5
+threshold because `scale_pos_weight` compensates for the 26.5% class
+imbalance, catching more actual churners. Model choice therefore depends
+on use: ranking customers for a retention budget → either model;
+flagging churners at a fixed threshold → XGBoost.
 
 ## Tests & CI
 `pytest tests/` runs locally; GitHub Actions runs lint + tests on every push.

@@ -3,8 +3,9 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-RAW = Path("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
-OUT = Path("data/processed")
+ROOT = Path(__file__).resolve().parent.parent
+RAW = ROOT / "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+OUT = ROOT / "data/processed"
 
 
 def clean(df: pd.DataFrame) -> pd.DataFrame:

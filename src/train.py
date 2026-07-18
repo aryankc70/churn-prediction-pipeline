@@ -11,8 +11,9 @@ from sklearn.preprocessing import StandardScaler
 
 from features import build_features
 
-PROCESSED = Path("data/processed")
-MODELS = Path("models")
+ROOT = Path(__file__).resolve().parent.parent
+PROCESSED = ROOT / "data/processed"
+MODELS = ROOT / "models"
 
 
 def load():
